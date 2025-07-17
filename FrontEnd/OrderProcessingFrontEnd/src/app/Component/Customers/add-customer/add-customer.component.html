@@ -1,0 +1,68 @@
+<p>add-customer works!</p>
+<div class="container mt-4">
+  <h2>Add Customer</h2>
+
+  <!-- Reusable Logout Component -->
+  <nav>
+    <app-logout (logOut)="onLogoutSuccess($event)" [customerName]="customer.firstName"></app-logout>
+  </nav>
+
+  <!-- Optional: Read-only UserID -->
+  <div class="mb-3">
+    <label>User ID (auto-filled from token):</label>
+    <input
+      type="number"
+      [value]="customer.userID"
+      class="form-control"
+      readonly
+    />
+  </div>
+
+  <!-- First Name -->
+  <div class="mb-3">
+    <label>First Name:</label>
+    <input
+      type="text"
+      [(ngModel)]="customer.firstName"
+      class="form-control"
+      placeholder="Enter first name"
+    />
+  </div>
+
+  <!-- Last Name -->
+  <div class="mb-3">
+    <label>Last Name:</label>
+    <input
+      type="text"
+      [(ngModel)]="customer.lastName"
+      class="form-control"
+      placeholder="Enter last name"
+    />
+  </div>
+
+  <!-- Email -->
+  <div class="mb-3">
+    <label>Email:</label>
+    <input
+      type="email"
+      [(ngModel)]="customer.email"
+      class="form-control"
+      placeholder="Enter email"
+    />
+  </div>
+
+  <!-- Phone Number -->
+  <div class="mb-3">
+    <label>Phone Number:</label>
+    <input
+      type="text"
+      [(ngModel)]="customer.phoneNumber"
+      class="form-control"
+      placeholder="Max 11 digits"
+    />
+    <small class="text-muted">Only digits allowed. Max length: 11</small>
+  </div>
+
+  <!-- Submit Button -->
+  <button class="btn btn-success" (click)="addCustomer()">Add Customer</button>
+</div>

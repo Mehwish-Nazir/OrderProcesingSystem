@@ -1,0 +1,14 @@
+<p>add-category works!</p>
+<form #categoryForm="ngForm" (ngSubmit)="onSubmit(categoryForm)">
+
+    <div class="form-group">
+        <label for="categoryname">Category Name:</label>
+        <input type="text" id="categoryName" name="categoryName"  [(ngModel)]="category.categoryName" required>
+        <div class="error" *ngIf="categoryForm.submitted && categoryForm.controls['categoryName']?.invalid">
+            Category Name is required
+          </div>
+              </div>
+    <button type="submit" class="btn btn-primary" [disabled]="categoryForm.invalid">
+        Add Category
+      </button>
+</form>

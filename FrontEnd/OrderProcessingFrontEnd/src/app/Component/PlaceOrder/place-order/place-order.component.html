@@ -1,0 +1,71 @@
+<p>place-order works!</p>
+
+<nav>
+    <p>Logout Component reusability</p>
+    <app-logout (logOut)="onLogoutSuccess()"></app-logout>
+  </nav>
+<form *ngIf="placeOrderForm" [formGroup]="placeOrderForm" (ngSubmit)="onSubmit()">
+
+  <label for="selectedCategory">Selected Category:</label>
+  <select formControlName="selectedCategory" id="selectedCategory">
+    <option value="" disabled>Select Category</option>
+    <option *ngFor="let cat of categories" [value]="cat.categoryID">{{ cat.categoryName }}</option>
+  </select>
+  <div *ngIf="placeOrderForm.get('selectedCategory')?.invalid && placeOrderForm.get('selectedCategory')?.touched" class="text-danger">
+    Category is required.
+  </div>
+
+  <div formArrayName="items" style="margin-top: 15px;">
+    <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+      
+      <label for="productName-{{i}}">Product Name:</label>
+      <select formControlName="productName" id="productName-{{i}}" (change)="onProductChange(i, item.get('productName')?.value)">
+        <option value="">--Select Product--</option>
+        <option *ngFor="let product of productByCategory" [value]="product.productName">{{product.productName}}</option>
+      </select>
+      
+      <div *ngIf="selectedProductStock[i] === 0" style="color: red;">
+        Product not available (Out of Stock)
+      </div>
+
+        <div>
+    <label>Display Price:</label>
+<input formControlName="displayPrice" type="number" [disabled]="true" />
+  </div>
+
+      <div style="margin-top: 5px;">
+        <label>Quantity:</label>
+        <button type="button" (click)="decreaseQuantity(i)">-</button>
+        <input type="number" formControlName="quantity" style="width: 60px; text-align: center;" min="1" />
+        <button type="button" (click)="increaseQuantity(i)">+</button>
+      </div>
+<!--
+      <label for="priceAtPurchase-{{i}}">Price at Purchase:</label>
+      <input type="number" id="priceAtPurchase-{{i}}" formControlName="priceAtPurchase" readonly />
+-->
+    </div>
+  </div>
+
+  <button type="button" (click)="addItem()" style="margin-bottom: 10px;">Add Another Product</button>
+
+  <br />
+
+  <label for="paymentMethod">Payment Method:</label>
+  <select formControlName="paymentMethod" id="paymentMethod">
+    <option value="">--Select Payment Method--</option>
+    <option *ngFor="let method of paymentMethodOptions" [value]="method">{{ method }}</option>
+  </select>
+  <div *ngIf="placeOrderForm.get('paymentMethod')?.invalid && placeOrderForm.get('paymentMethod')?.touched" class="text-danger">
+    Payment method is required.
+  </div>
+
+  <br />
+
+  <label for="orderDate">Order Date:</label>
+  <input type="date" id="orderDate" formControlName="orderDate" />
+
+  <br /><br />
+
+  <button type="submit" [disabled]="placeOrderForm.invalid">Place Order</button>
+
+</form>

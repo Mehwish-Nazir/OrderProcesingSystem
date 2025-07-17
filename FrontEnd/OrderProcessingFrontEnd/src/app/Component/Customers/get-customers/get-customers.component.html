@@ -1,0 +1,32 @@
+<a href="/get-customer-by-id">GetCustomerByID</a> |
+<a href="/customer-with-user">CustomerWithUser</a> |
+<a href="/add-customer">Add Customer</a>
+<router-outlet></router-outlet>
+<p>get-customers works!</p>
+<button (click)="getCustomers()">getCustomers</button>
+<ul>
+    <li *ngFor="let customer of customers">
+       {{customer.customerID}} {{ customer.firstName }} {{ customer.lastName }} - {{ customer.email }} {{customer.phoneNumber}}
+    </li>
+</ul>
+<table>
+    <thead>
+        <tr>
+        <th>CustomerID</th>
+        <th>FistName</th>
+        <th>LastName</th>
+        <th>Email</th>
+        <th>PhoneNumber</th>
+        </tr>
+    </thead>
+    <tbody>
+  <tr *ngFor="let customer of customers">
+    <td>{{customer.customerID}}</td>
+    <td>{{customer.firstName}}</td>
+    <td>{{customer.lastName}}</td>
+    <td>{{customer.email}}</td>
+    <td>{{customer.phoneNumber}}</td>
+  </tr>
+    </tbody>
+</table>
+

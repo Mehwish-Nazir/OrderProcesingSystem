@@ -1,0 +1,73 @@
+<p>search-product works!</p>
+<div class="container mx-auto p-4">
+  <!-- Search Bar -->
+  <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="mb-4 flex flex-wrap gap-2 items-center">
+    <input
+      type="text"
+      formControlName="searchText"
+      placeholder="Search by Product or Category"
+      class="border p-2 rounded w-full md:w-1/2"
+    />
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+      Search
+    </button>
+
+    <!-- Page Size Dropdown -->
+<select
+  [value]="pageSize"
+  (change)="onPageSizeChange($event)"
+  class="ml-auto border p-2 rounded"
+>
+  <option *ngFor="let size of pageSizeOptions" [value]="size">
+    {{ size }} per page
+  </option>
+</select>
+  </form>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center py-8 text-blue-700 font-semibold">Loading...</div>
+
+  <!-- Product Grid -->
+  <div *ngIf="products.length > 0 && !loading" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div *ngFor="let product of products" class="border p-4 rounded shadow hover:shadow-md transition-all">
+      <h3 class="text-lg font-bold text-gray-800 mb-2">{{ product.productName }}</h3>
+      <p><strong>Price:</strong> Rs. {{ product.price }}</p>
+      <p><strong>Stock:</strong> {{ product.stock }}</p>
+      <p><strong>Category:</strong> {{ product.categoryName }}</p>
+      <p><strong>Status:</strong>
+        <span [ngClass]="{
+          'text-green-600': product.stock > 0,
+          'text-red-600 font-semibold': product.stock === 0
+        }">
+          {{ product.stockStatus }}
+        </span>
+      </p>
+      <p class="text-sm text-gray-500">Created: {{ product.createdAt | date:'mediumDate' }}</p>
+    </div>
+  </div>
+
+  <!-- No Results -->
+  <div *ngIf="!loading && products.length === 0" class="text-center text-gray-500 mt-6">
+    No products found.
+  </div>
+
+  <!-- Pagination Controls -->
+  <div *ngIf="totalPages > 1 && !loading" class="mt-6 flex flex-wrap justify-center gap-2 items-center">
+    <button (click)="previousPage()" [disabled]="pageNumber === 1"
+      class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Previous</button>
+
+    <ng-container *ngFor="let page of pages">
+      <button
+        (click)="goToPage(page)"
+        [class.bg-blue-600]="pageNumber === page"
+        [class.text-white]="pageNumber === page"
+        class="px-3 py-1 border rounded hover:bg-blue-100"
+      >
+        {{ page }}
+      </button>
+    </ng-container>
+
+    <button (click)="nextPage()" [disabled]="pageNumber === totalPages"
+      class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</button>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<p>customer-with-user-detail works!</p>
+<div *ngIf="error">{{error}}</div>
+<button (click)="getCustomerWithUser()">CustomerWithUser</button>
+
+<div *ngIf="customers.length>0" class="card-container">
+    <li *ngFor="let customer of customers">
+        <h3>{{customer.firstName}} {{customer.lastName}}</h3>
+        <p><strong>Email:</strong> {{ customer.email }}</p>
+        <p><strong>Phone:</strong> {{ customer.phoneNumber }}</p>
+        <p><strong>User Status:</strong> {{ customer.userStatus }}</p>
+        <p><strong>Username:</strong> {{ customer.usernameDisplay }}</p>
+    </li>
+</div>
+<div *ngIf="customers.length === 0 && !error">
+    <p>No customers available.</p>
+  </div>

@@ -1,0 +1,29 @@
+<div class="register-container">
+  <!-- Left: Form -->
+  <div class="form-wrapper">
+    <h2>Create Account</h2>
+
+    <label for="username">Username</label>
+    <input id="username" name="username" [(ngModel)]="registerData.username" placeholder="Enter username" required>
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" [(ngModel)]="registerData.password" placeholder="Enter password" required>
+
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" [(ngModel)]="registerData.email" placeholder="Enter email" required>
+
+    <label for="role">Select Role</label>
+    <select id="role" name="role" [(ngModel)]="registerData.role" required>
+      <option value="" disabled selected>Select a role</option>
+      <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+    </select>
+
+    <button (click)="onRegister()">Register</button>
+  </div>
+
+  <!-- Right: Image -->
+  <div class="image-wrapper">
+    <img src="assets/register.jpg" alt="Register Illustration" />
+
+  </div>
+</div>

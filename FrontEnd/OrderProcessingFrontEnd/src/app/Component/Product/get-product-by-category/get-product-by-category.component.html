@@ -1,0 +1,38 @@
+<h2>Get Products By Category</h2>
+
+<!-- Category Form -->
+<form [formGroup]="categoryIdForm" (ngSubmit)="onSubmit()">
+  <label for="categoryID">Category ID:</label>
+  <input
+    type="number"
+    id="categoryID"
+    formControlName="categoryID"
+    required
+  />
+  <button type="submit">Fetch Products</button>
+
+  <!-- Validation message -->
+  <div *ngIf="categoryIdForm.get('categoryID')?.invalid && categoryIdForm.get('categoryID')?.touched" style="color: red;">
+    Category ID is required.
+  </div>
+</form>
+
+<hr />
+
+<!-- Product List -->
+<div *ngIf="productList.length > 0; else noProducts">
+  <h3>Product List</h3>
+  <ul>
+    <li *ngFor="let product of productList">
+      <strong>{{ product.productName }}</strong> - {{ product.price }} Rs - Stock: {{ product.stock }}
+     <span *ngIf="product.stock === 0" style="color: red; font-weight: bold;">
+        → Product not available
+      </span>
+    </li>
+  </ul>
+</div>
+
+<!-- Message if product list is empty -->
+<ng-template #noProducts>
+  <p>No products to show.</p>
+</ng-template>

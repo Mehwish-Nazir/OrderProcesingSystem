@@ -1,0 +1,16 @@
+<nav class="navbar">
+  <div class="nav-left">🏪 CommerceCore</div>
+
+  <div class="nav-right" *ngIf="!isLoading && userProfile">
+    <div class="user-profile">
+      <div class="circle-avatar">
+        {{ userProfile.displayName.charAt(0).toUpperCase() }}
+      </div>
+      <div class="user-info">
+        <div class="name">{{ userProfile.displayName }}</div>
+        <div class="role">{{ userProfile.role }}</div>
+      </div>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>

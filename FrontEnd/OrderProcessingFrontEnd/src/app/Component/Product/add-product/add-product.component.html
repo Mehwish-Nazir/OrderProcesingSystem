@@ -1,0 +1,52 @@
+<h2>Add New Product</h2>
+
+<form *ngIf="productForm" [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <!-- Product Name -->
+  <div class="form-group">
+    <label for="productName">Product Name:</label>
+    <input id="productName" type="text" formControlName="productName" class="formControl" />
+    <div *ngIf="productForm.get('productName')?.invalid && productForm.get('productName')?.touched" class="text-danger">
+      <div *ngIf="productForm.get('productName')?.errors?.['required']">Product Name is required.</div>
+      <div *ngIf="productForm.get('productName')?.errors?.['minlength']">Minimum 3 characters required.</div>
+    </div>
+  </div>
+
+  <!-- Price -->
+  <div class="form-group">
+    <label for="price">Price:</label>
+    <input id="price" type="number" formControlName="price" class="formControl" />
+    <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="text-danger">
+      Price is required.
+    </div>
+  </div>
+
+  <!-- Stock -->
+  <div class="form-group">
+    <label for="stock">Stock:</label>
+    <input id="stock" type="number" formControlName="stock" class="formControl" />
+    <div *ngIf="productForm.get('stock')?.invalid && productForm.get('stock')?.touched" class="text-danger">
+      Stock is required.
+    </div>
+    <div *ngIf="productForm.get('stock')?.errors?.['pattern']" class="text-danger">
+      Stock must be a valid number.
+    </div>
+  </div>
+
+  <!-- Category Dropdown -->
+  <div class="form-group">
+    <label for="categoryID">Category:</label>
+    <select id="categoryID" formControlName="categoryID" class="formControl">
+      <option value="" disabled selected>Select Category</option>
+      <option *ngFor="let cat of categories" [value]="cat.categoryID">
+        {{ cat.categoryName }}
+      </option>
+    </select>
+    <div *ngIf="productForm.get('categoryID')?.invalid && productForm.get('categoryID')?.touched" class="text-danger">
+      Category is required.
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">Add Product</button>
+  <button routerLink="/get-products" class="btn btn-success" type="button">View Added Products</button>
+</form>

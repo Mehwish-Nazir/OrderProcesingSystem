@@ -1,0 +1,15 @@
+<p>auth works!</p>
+<div>
+    <label>Username:</label>
+    <input [(ngModel)]="loginData.username" placeholder="Enter username">
+  </div>
+  
+  <div>
+    <label>Password:</label>
+    <input type="password" [(ngModel)]="loginData.password" placeholder="Enter Password">
+  </div>
+<button (click)="onLogin()">Login</button>
+
+<p>Don't have an account</p>
+
+<button (click)="goToRegister()">Register</button>

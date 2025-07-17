@@ -1,0 +1,22 @@
+<nav class="sidebar">
+  <ul class="nav-links">
+    <!-- Admin Navigation -->
+    <ng-container *ngIf="isAdmin">
+    <!--  <li><a routerLink="/admin/add-customer" routerLinkActive="active">➕ Add Customer</a></li>-->
+      <li><a routerLink="/admin/add-product" routerLinkActive="active">➕ Add Product</a></li>
+      <li><a routerLink="/admin/add-category" routerLinkActive="active">📂 Add Category</a></li>
+      <li><a routerLink="/admin/get-customers" routerLinkActive="active">👥 View Customers</a></li>
+      <li><a routerLink="/admin/get-products" routerLinkActive="active">📦 View Products</a></li>
+      <li><a routerLink="/admin/place-order" routerLinkActive="active">🛒 Place Order</a></li>
+      <li><a routerLink="/admin/order-details" routerLinkActive="active">📄 Order Details</a></li>
+    </ng-container>
+
+    <!-- Customer Navigation -->
+    <ng-container *ngIf="isCustomer">
+      <li><a routerLink="/customer/view-products" routerLinkActive="active">📦 Browse Products</a></li>
+      <li><a routerLink="/customer/search-product" routerLinkActive="active">🔍 Search Products</a></li>
+      <li><a routerLink="/customer/place-order" routerLinkActive="active">🛒 Place Order</a></li>
+      <li><a routerLink="/customer/order-details" routerLinkActive="active">📄 My Orders</a></li>
+    </ng-container>
+  </ul>
+</nav>
