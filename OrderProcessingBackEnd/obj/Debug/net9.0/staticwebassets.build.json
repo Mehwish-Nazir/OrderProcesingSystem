@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "Fq/uaH75cvgcbda2g6DLw4zPiHgF0LoAJ0xIIy3z4Dw=",
+  "Source": "OrderProcessingBackEnd",
+  "BasePath": "_content/OrderProcessingBackEnd",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

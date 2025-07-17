@@ -1,0 +1,152 @@
+// ✅ ProductSearchFilter.cs (Request DTO)
+public class ProductSearchFilter
+{
+    public string? SearchTerm { get; set; }
+    public int PageNumber { get; set; } = 1;
+    public int PageSize { get; set; } = 3;
+}
+
+// ✅ ProductResponseDto.cs (Response DTO)
+public class ProductResponseDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string CategoryName { get; set; }
+    public decimal Price { get; set; }
+    // ImageUrl can be added later
+}
+
+// ✅ PagedResponse.cs (Generic Response Wrapper)
+public class PagedResponse<T>
+{
+    public List<T> Items { get; set; } = new();
+    public int TotalCount { get; set; }
+    public int PageNumber { get; set; }
+    public int PageSize { get; set; }
+}
+
+// ✅ IProductRepository.cs
+public interface IProductRepository
+{
+    Task<PagedResponse<ProductResponseDto>> SearchProductsAsync(ProductSearchFilter filter);
+}
+
+// ✅ ProductRepository.cs
+public class ProductRepository : IProductRepository
+{
+    private readonly AppDbContext _context;
+    private readonly ILogger<ProductRepository> _logger;
+
+    public ProductRepository(AppDbContext context, ILogger<ProductRepository> logger)
+    {
+        _context = context;
+        _logger = logger;
+    }
+
+    public async Task<PagedResponse<ProductResponseDto>> SearchProductsAsync(ProductSearchFilter filter)
+    {
+        try
+        {
+            var query = _context.Products
+                .Include(p => p.Category)
+                .AsNoTracking()
+                .Where(p =>
+                    string.IsNullOrEmpty(filter.SearchTerm) ||
+                    p.Name.ToLower().Contains(filter.SearchTerm.ToLower()) ||
+                    p.Category.Name.ToLower().Contains(filter.SearchTerm.ToLower()));
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(p => p.Name)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .Select(p => new ProductResponseDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    CategoryName = p.Category.Name,
+                    Price = p.Price
+                })
+                .ToListAsync();
+
+            return new PagedResponse<ProductResponseDto>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error searching products");
+            throw;
+        }
+    }
+}
+
+// ✅ IProductService.cs
+public interface IProductService
+{
+    Task<PagedResponse<ProductResponseDto>> SearchProductsAsync(ProductSearchFilter filter);
+}
+
+// ✅ ProductService.cs
+public class ProductService : IProductService
+{
+    private readonly IProductRepository _productRepository;
+
+    public ProductService(IProductRepository productRepository)
+    {
+        _productRepository = productRepository;
+    }
+
+    public async Task<PagedResponse<ProductResponseDto>> SearchProductsAsync(ProductSearchFilter filter)
+    {
+        return await _productRepository.SearchProductsAsync(filter);
+    }
+}
+
+// ✅ ProductController.cs
+[ApiController]
+[Route("api/[controller]")]
+public class ProductController : ControllerBase
+{
+    private readonly IProductService _productService;
+    private readonly ILogger<ProductController> _logger;
+
+    public ProductController(IProductService productService, ILogger<ProductController> logger)
+    {
+        _productService = productService;
+        _logger = logger;
+    }
+
+    [HttpGet("search")]
+    [ProducesResponseType(typeof(PagedResponse<ProductResponseDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> SearchProducts([FromQuery] ProductSearchFilter filter)
+    {
+        try
+        {
+            var result = await _productService.SearchProductsAsync(filter);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unhandled exception in SearchProducts");
+            return StatusCode(500, new ApiErrorResponse
+            {
+                Message = "An unexpected error occurred.",
+                Details = ex.Message
+            });
+        }
+    }
+}
+
+// ✅ ApiErrorResponse.cs
+public class ApiErrorResponse
+{
+    public string Message { get; set; }
+    public string? Details { get; set; }
+}
